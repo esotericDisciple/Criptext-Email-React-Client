@@ -1,8 +1,8 @@
-#!bin/bash
+#!/bin/bash
 tempBuildFolder='deps'
 lsbCommand='lsb_release'
 lsbDebianFamily=("Debian Ubuntu Mint Kali")
-lsbArch='Arch'
+lsbArch=("ManjaroLinux Arch")
 
 function PSM() {
   tput setaf 2;tput bold; echo "$1"; tput sgr0;
@@ -44,7 +44,7 @@ LSB_DISTRO=$(lsb_release -is)
 if [[ " ${lsbDebianFamily[@]} " =~ " ${LSB_DISTRO} " ]]; then
   LD_FLAGS='/usr/lib/x86_64-linux-gnu/libcrypto.a'
   repoUpdate='apt-get update'
-elif [ $LSB_DISTRO == $lsbArch ]; then
+elif [[ " ${lsbArch[@]} " =~ " ${LSB_DISTRO} " ]]; then
   LD_FLAGS='/usr/lib/libcrypto.so'
   repoUpdate='pacman -Sy'
 else
@@ -72,7 +72,7 @@ printf "  - Checking latest repos \n";
 printf "  - Installing build dependencies \n";
 if [[ " ${lsbDebianFamily[@]} " =~ " ${LSB_DISTRO} " ]]; then
   INSTALL_DEPS_ERROR=$( { sudo apt-get install libssl1.0-dev gcc cmake git pkg-config tcl -y > /dev/null; } 2>&1 )
-elif [ $LSB_DISTRO == $lsbArch ]; then
+elif [[ " ${lsbArch[@]} " =~ " ${LSB_DISTRO} " ]]; then
   INSTALL_DEPS_ERROR=$( { sudo pacman -S --noconfirm base-devel cmake git pkg-config openssl tcl > /dev/null; } 2>&1 )
 fi
 
